@@ -58,7 +58,9 @@
   [text]
   (try
     (parse-version text)
-    (catch Exception e (do (println (.getMessage e))
+    (catch Exception e (do
+                         (println (.getMessage e))
+                         (.printStackTrace e)
                          {:major 0 :minor 1 :patch 0 :status "SNAPSHOT"}))))
 
 ;------------------------------------------------------------------------------
@@ -74,8 +76,8 @@
 
 (defn get-version-file 
   "Return the first version file which exists, else a new file"
-  []
-  (loop [v possible-version-files]
+  [& files]
+  (loop [v (concat possible-version-files files)]
     (if (.exists (first v)) (first v)
       (if (empty? v)
         (clojure.java.io/file "./version")
@@ -156,7 +158,14 @@ About:
   (let [[options junk banner] (parse-args args)
         fallback-file (last args)]
     (cond
-      (or (empty? args) (:help options))
+      (empty? args) 
+          (println 
+            (render-version 
+              (safe-parse-version 
+                (slurp
+                  (get-version-file)))))
+
+      (:help options)
           (println usage)
 
       (not (nil? (:force options)))
