@@ -47,7 +47,7 @@
        "."
        (:patch version)
        (if (nil? (:status version))
-         ""
+         "-"
          (str (:status version)))))
 
 (defn safe-parse-version 
@@ -61,12 +61,12 @@
     (catch Exception e (do (println (.getMessage e))
                          {:major 0 :minor 1 :patch 0 :status "SNAPSHOT"}))))
 
-
 ;------------------------------------------------------------------------------
 ; Do the mucking about to find the VERSION file
 
 (def possible-version-files
   (list
+    (clojure.java.io/file "./project.clj")
     (clojure.java.io/file "./version")
     (clojure.java.io/file "./VERSION")
     (clojure.java.io/file "./version.txt")
@@ -86,10 +86,15 @@
         (.write wrtr (render-version version))))
 
 (defn update-version-number [file updater]
-  (let [vs (try (read file)
-             (catch Exception e (slurp file)))
-        vf (updater (safe-parse-version vs))]
-    (write-version file vf)
+  (let [vs    (slurp file)
+        value (safe-parse-version vs)
+        vf    (updater value)]
+    (with-open [wrtr (clojure.java.io/writer file)]
+      (.write wrtr (clojure.string/replace 
+                     vs 
+                     (re-pattern (get value :match 
+                                      "\\d+\\.\\d+\\.\\d+(-\\w+)?"))
+                                           (render-version vf))))
     vf))
 
 ;------------------------------------------------------------------------------
