@@ -112,8 +112,6 @@
       -x, --major   causes bump to up the major version as per SemVer 2.0.0-RC1
       -y, --minor   .... for the minor version
       -z, --build   .... for the build number
-      -f, --force   forcibly sets the version number, if the provided value is
-                      a legal SemVer version.
     
 Notes:
  - If a version-file argument is provided, it MUST be the last argument or else 
@@ -144,9 +142,7 @@ About:
        :default false :flag true]
    ["-z" "--patch" "specifies that the patch number is to be bumped"  
        :default true :flag true]
-   ["-f" "--force" "specifies that the build number is to be forcibly set"      
-       :default nil :parse-fn parse-version]
-   ["-?" "--help" "standard flag, forces the help message to be printed"
+   ["-h" "--help" "standard flag, forces the help message to be printed"
        :default nil :flag true]))
 
 (defn rp [value]
@@ -155,24 +151,21 @@ About:
 (defn -main
   "The entry point function for bumpkin"
   [& args]
-  (let [[options junk banner] (parse-args args)
+  (let [[options junk banner] 
+        (try (parse-args args)
+             (catch Exception e [{:error true} 0 0]))
         fallback-file (last args)]
     (cond
+      (or (:help options) (:error options))
+          (println usage)
+
       (empty? args) 
           (println 
             (render-version 
               (safe-parse-version 
                 (slurp
                   (get-version-file)))))
-
-      (:help options)
-          (println usage)
-
-      (not (nil? (:force options)))
-         (let [v (safe-parse-version (:force options))]
-          (write-version (get-version-file) v)
-          (rp v)) 
-         
+ 
       (:major options)
         (rp (update-version-number (get-version-file) major-inc))
 

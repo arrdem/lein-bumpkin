@@ -1,9 +1,16 @@
 #Bumpkin
 ---------
-Bumpkin is quite simply a Clojure bump script with [leiningen](http://leiningen.org/) support which implements the [Semantic Versioning](http://semver.org/) specification.
+Bumpkin is quite simply a Clojure bump program with 
+[leiningen](http://leiningen.org/) integration which implements the 
+[Semantic Versioning](http://semver.org/) specification.
 
 ###Features
-Bumpkin not only provides the minimum of bump script functionality which one would expect, such as tracking and bumping a version number, but also provides some options by which the user can explicitly bump the major, minor and build version numbers as well as generate a (probably nonsensical) name for your version.
+Bumpkin not only provides the minimum of bump script functionality which one 
+would expect, such as tracking and bumping a version number, but also provides 
+some options by which the user can explicitly bump the major, minor and build 
+version numbers. 
+
+###Instalation 
 
 ###Usage
 
@@ -15,8 +22,6 @@ Bumpkin not only provides the minimum of bump script functionality which one wou
           -x, --major   causes bump to up the major version as per SemVer 2.0.0-RC1
           -y, --minor   .... for the minor version
           -z, --build   .... for the build number
-          -f, --force   forcibly sets the version number, if the provided value is
-                          a legal SemVer version.
         
      Notes:
       - If a version-file argument is provided, it MUST be the last argument or else 
@@ -33,7 +38,8 @@ Bumpkin not only provides the minimum of bump script functionality which one wou
 
        When `bump`ing, bumpkin looks for files which may contain version numbers in
        the following order
-       ./version, ./VERSION
+       ./project.clj, ./version, ./VERSION, ./version.txt ./VERSION.txt
+       if none of these files exist, ./version is created at 0.1.0-SNAPSHOT
 
        Copyright Reid McKenzie <rmckenzie92@gmail.com>
        released under the Eclipse Public License 1.0 
@@ -41,6 +47,6 @@ Bumpkin not only provides the minimum of bump script functionality which one wou
 
 ###On The Horizon (a long way off)
 
-     * The power to bump the version number in a Leinigen project.clj
+     * Leiningen hooks for automatic version bumpage
      * Good codename generation ( actually pretty hard )
      * Codename generation API
