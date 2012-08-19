@@ -67,7 +67,6 @@
 
 (def possible-version-files
   (list
-    (clojure.java.io/file "./project.clj")
     (clojure.java.io/file "./version")
     (clojure.java.io/file "./VERSION")
     (clojure.java.io/file "./version.txt")
