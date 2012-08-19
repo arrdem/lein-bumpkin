@@ -106,6 +106,7 @@
 
     If invoked with no arguments, bumpkin will print the version number and
     exit 0. Other behavior requires arguments as specified below.
+      -?, --help    forces the printing of this message, *nix standard behavior
       -x, --major   causes bump to up the major version as per SemVer 2.0.0-RC1
       -y, --minor   .... for the minor version
       -z, --build   .... for the build number
@@ -142,7 +143,9 @@ About:
    ["-z" "--patch" "specifies that the patch number is to be bumped"  
        :default true :flag true]
    ["-f" "--force" "specifies that the build number is to be forcibly set"      
-       :default nil :parse-fn parse-version]))
+       :default nil :parse-fn parse-version]
+   ["-?" "--help" "standard flag, forces the help message to be printed"
+       :default nil :flag true]))
 
 (defn rp [value]
   (println (render-version value)))
@@ -150,10 +153,10 @@ About:
 (defn -main
   "The entry point function for bumpkin"
   [& args]
-  (let [[options junk usage] (parse-args args)
+  (let [[options junk banner] (parse-args args)
         fallback-file (last args)]
     (cond
-      (empty? args) 
+      (or (empty? args) (:help options))
           (println usage)
 
       (not (nil? (:force options)))
