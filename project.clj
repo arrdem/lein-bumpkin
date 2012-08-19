@@ -1,4 +1,4 @@
-(defproject bumpkin "0.2.2-SNAPSHOT"
+(defproject bumpkin "0.3.0-SNAPSHOT"
   :description "A (not so simple) bump program in Clojure"
   :url "http://github.com/rdmckenzie/bumpkin"
   :main bumpkin.core
